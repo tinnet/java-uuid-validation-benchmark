@@ -49,50 +49,50 @@ public class RegexValidationPregenerateBenchmark {
 
     @Benchmark
     public Object baseLine() {
-        return validUUIDs.get(random.nextInt(validUUIDs.size()));
+        return validUUIDs.get(random.nextInt(NUM_PREGENERATED_UUID));
     }
 
     @Benchmark
     public Object measurePattern1() {
-        return UUID_PATTERN_1.matcher(validUUIDs.get(random.nextInt(validUUIDs.size()))).matches();
+        return UUID_PATTERN_1.matcher(validUUIDs.get(random.nextInt(NUM_PREGENERATED_UUID))).matches();
     }
 
     @Benchmark
     public Object measurePattern2() {
-        return UUID_PATTERN_2.matcher(validUUIDs.get(random.nextInt(validUUIDs.size()))).matches();
+        return UUID_PATTERN_2.matcher(validUUIDs.get(random.nextInt(NUM_PREGENERATED_UUID))).matches();
     }
 
 
     @Benchmark
     public Object measurePattern3() {
-        return UUID_PATTERN_3.matcher(validUUIDs.get(random.nextInt(validUUIDs.size()))).matches();
+        return UUID_PATTERN_3.matcher(validUUIDs.get(random.nextInt(NUM_PREGENERATED_UUID))).matches();
     }
 
 
     @Benchmark
     public Object measurePattern4() {
-        return UUID_PATTERN_4.matcher(validUUIDs.get(random.nextInt(validUUIDs.size()))).matches();
+        return UUID_PATTERN_4.matcher(validUUIDs.get(random.nextInt(NUM_PREGENERATED_UUID))).matches();
     }
 
     @Benchmark
     public Object measurePattern5() {
-        return UUID_PATTERN_5.matcher(validUUIDs.get(random.nextInt(validUUIDs.size()))).matches();
+        return UUID_PATTERN_5.matcher(validUUIDs.get(random.nextInt(NUM_PREGENERATED_UUID))).matches();
     }
 
     @Benchmark
     public Object measurePattern6() {
-        return UUID_PATTERN_6.matcher(validUUIDs.get(random.nextInt(validUUIDs.size()))).matches();
+        return UUID_PATTERN_6.matcher(validUUIDs.get(random.nextInt(NUM_PREGENERATED_UUID))).matches();
     }
 
     @Benchmark
     public Object measurePattern4WithLengthCheckValidLength() {
-        final String value = validUUIDs.get(random.nextInt(validUUIDs.size()));
+        final String value = validUUIDs.get(random.nextInt(NUM_PREGENERATED_UUID));
         return value.length() == 36 && UUID_PATTERN_4.matcher(value).matches();
     }
 
     @Benchmark
     public Object measurePattern4WithLengthCheckInvalidLength() {
-        final String value = invalidUUIDs.get(random.nextInt(invalidUUIDs.size()));
+        final String value = invalidUUIDs.get(random.nextInt(NUM_PREGENERATED_UUID));
         return value.length() == 36 && UUID_PATTERN_4.matcher(value).matches();
     }
 
