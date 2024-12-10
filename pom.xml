@@ -62,6 +62,16 @@ THE POSSIBILITY OF SUCH DAMAGE.
             <artifactId>jspecify</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.17.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>33.3.1-jre</version>
+        </dependency>
     </dependencies>
 
     <properties>
