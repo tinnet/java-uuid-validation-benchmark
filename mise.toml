@@ -1,0 +1,10 @@
+[tools]
+java = "21"
+
+[tasks.build]
+description = "Build the benchmark.jar"
+run = "mvn install"
+
+[tasks.clean]
+description = "Build the benchmark.jar"
+run = "mvn clean"

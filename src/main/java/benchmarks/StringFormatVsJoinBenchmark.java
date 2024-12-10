@@ -6,18 +6,33 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@BenchmarkMode(Mode.Throughput) // Measures operations per second
-@OutputTimeUnit(TimeUnit.MILLISECONDS) // Results in milliseconds
-@State(Scope.Thread) // One instance per thread
+@BenchmarkMode(Mode.Throughput)
+@Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 10, time = 1, timeUnit = TimeUnit.SECONDS)
+@Fork(1)
+@Threads(1)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@State(Scope.Thread)
 public class StringFormatVsJoinBenchmark {
 
-    private String corporation = "Corp";
-    private String department = "Dept";
-    private int employeeNumber = 12345;
+    private String corporation;
+    private String department;
+    private int employeeNumber;
+
+    private Random random = new Random();
+
+    @Setup
+    void setup(){
+        corporation = "Corp";
+        department = "Dept";
+        employeeNumber = 12345;
+    }
 
     @Benchmark
     public String testStringFormat() {
@@ -31,6 +46,7 @@ public class StringFormatVsJoinBenchmark {
 
     @Benchmark
     public String testStringBuilder() {
+        // intelij wants to replace this with a string concat, don't let it!
         StringBuilder sb = new StringBuilder();
         sb.append(corporation).append(department).append("Dept").append("-").append(employeeNumber);
         return sb.toString();
@@ -42,17 +58,19 @@ public class StringFormatVsJoinBenchmark {
     }
 
     @Benchmark
+    public String testStringPlusDynamic() {
+        return corporation + "-" + department + "-" + random.nextInt();
+    }
+
+    @Benchmark
     public String testStringJoinStream() {
+        // intelij wants to replace this with String.join concat, don't let it!
         return Stream.of(corporation, department, String.valueOf(employeeNumber)).collect(Collectors.joining("-"));
     }
 
     public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
+        var opt = new OptionsBuilder()
                 .include(".*" + StringFormatVsJoinBenchmark.class.getSimpleName() + ".*")
-                .warmupIterations(2)
-                .measurementIterations(3)
-                .threads(2)
-                .forks(1)
                 .build();
 
         new Runner(opt).run();

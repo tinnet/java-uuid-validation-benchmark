@@ -12,9 +12,13 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@State(Scope.Thread)
 @BenchmarkMode(Mode.Throughput)
+@Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 10, time = 1, timeUnit = TimeUnit.SECONDS)
+@Fork(1)
+@Threads(1)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
+@State(Scope.Thread)
 public class UuidRegexValidationBenchmark {
 
     // Pattern 1 was encountered in an actual application
@@ -106,12 +110,8 @@ public class UuidRegexValidationBenchmark {
     }
 
     public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
+        var opt = new OptionsBuilder()
                 .include(".*" + UuidRegexValidationBenchmark.class.getSimpleName() + ".*")
-                .warmupIterations(5)
-                .measurementIterations(10)
-                .threads(4)
-                .forks(2)
                 .build();
 
         new Runner(opt).run();
