@@ -3,7 +3,6 @@ package benchmarks;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
-import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.util.UUID;
@@ -110,8 +109,12 @@ public class UuidRegexValidationBenchmark {
     }
 
     public static void main(String[] args) throws RunnerException {
+        var className = UuidRegexValidationBenchmark.class.getSimpleName();
         var opt = new OptionsBuilder()
-                .include(".*" + UuidRegexValidationBenchmark.class.getSimpleName() + ".*")
+                .include(".*" + className + ".*")
+                // check it out on https://jmh.morethan.io/
+                .result(className + "-results.json")
+                .resultFormat(org.openjdk.jmh.results.format.ResultFormatType.JSON)
                 .build();
 
         new Runner(opt).run();

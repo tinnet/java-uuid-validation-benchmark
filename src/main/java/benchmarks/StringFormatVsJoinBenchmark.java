@@ -3,11 +3,9 @@ package benchmarks;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
-import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,7 +26,7 @@ public class StringFormatVsJoinBenchmark {
     private Random random = new Random();
 
     @Setup
-    void setup(){
+    public void setup(){
         corporation = "Corp";
         department = "Dept";
         employeeNumber = 12345;
@@ -69,8 +67,12 @@ public class StringFormatVsJoinBenchmark {
     }
 
     public static void main(String[] args) throws RunnerException {
+        var className = StringFormatVsJoinBenchmark.class.getSimpleName();
         var opt = new OptionsBuilder()
-                .include(".*" + StringFormatVsJoinBenchmark.class.getSimpleName() + ".*")
+                .include(".*" + className + ".*")
+                // check it out on https://jmh.morethan.io/
+                .result(className + "-results.json")
+                .resultFormat(org.openjdk.jmh.results.format.ResultFormatType.JSON)
                 .build();
 
         new Runner(opt).run();
