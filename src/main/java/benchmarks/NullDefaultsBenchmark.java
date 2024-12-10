@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 @Threads(1)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
-public class NullDefaults {
+public class NullDefaultsBenchmark {
     private record Car(String make, String model, int horsePower) {
         static Car best() {
             return new Car("Volvo", "XC70", 308);
@@ -76,7 +76,7 @@ public class NullDefaults {
     }
 
     public static void main(String[] args) throws RunnerException {
-        var className = NullDefaults.class.getSimpleName();
+        var className = NullDefaultsBenchmark.class.getSimpleName();
         var opt = new OptionsBuilder()
                 .include(".*" + className + ".*")
                 // check it out on https://jmh.morethan.io/

@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 @Threads(1)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
-public class StringUtils {
+public class StringUtilsBenchmark {
     @Param({"STRING", "BLANK", "EMPTY", "NULL"})
     private String testCase;
 
@@ -66,7 +66,7 @@ public class StringUtils {
     }
 
     public static void main(String[] args) throws RunnerException {
-        var className = StringUtils.class.getSimpleName();
+        var className = StringUtilsBenchmark.class.getSimpleName();
         var opt = new OptionsBuilder()
                 .include(".*" + className + ".*")
                 // check it out on https://jmh.morethan.io/
