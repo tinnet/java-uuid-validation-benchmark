@@ -1,7 +1,6 @@
 package benchmarks;
 
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
@@ -18,47 +17,62 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
 public class NullDefaults {
-    private static class ClassToReturn {
-        @Override
-        public String toString() {
-            return "ClassToReturn{}";
+    private record Car(String make, String model, int horsePower) {
+        static Car best() {
+            return new Car("Volvo", "XC70", 308);
         }
     }
 
-    private record Car(String make, String model, int horsePower) {
-    }
-
-    @Param({"STRING", "RECORD", "NULL"})
+    @Param({"OBJECT", "NULL"})
     private String testCase;
 
     private Object objOrNull;
 
-    private ClassToReturn toReturn;
+    private final Car preAllocated = Car.best();
 
     @Setup
     public void prepare() {
         objOrNull = switch (testCase) {
-            case "STRING" -> "some string";
-            case "RECORD" -> new Car("Volvo", "XC70", 308);
+            case "OBJECT" -> new Car("Polestar", "2", 400);
             case "NULL" -> null;
             default -> throw new IllegalArgumentException("Invalid test case");
         };
-        toReturn = new ClassToReturn();
+    }
+
+
+    @Benchmark
+    public Object baselineAllocation() {
+        return Car.best();
     }
 
     @Benchmark
     public Object ternaryNullCheck() {
-        return objOrNull == null ? toReturn : objOrNull;
+        return objOrNull == null ? preAllocated : objOrNull;
+    }
+
+    @Benchmark
+    public Object ternaryNullCheckWithAllocation() {
+        return objOrNull == null ? Car.best() : objOrNull;
     }
 
     @Benchmark
     public Object requireNonNullElse() {
-        return Objects.requireNonNullElse(objOrNull, toReturn);
+        return Objects.requireNonNullElse(objOrNull, preAllocated);
+    }
+
+    @Benchmark
+    public Object requireNonNullElseWithAllocation() {
+        return Objects.requireNonNullElse(objOrNull, Car.best());
     }
 
     @Benchmark
     public Object optionalOrElse() {
-        return Optional.ofNullable(objOrNull).orElse(toReturn);
+        return Optional.ofNullable(objOrNull).orElse(preAllocated);
+    }
+
+    @Benchmark
+    public Object optionalOrElseWithAllocation() {
+        return Optional.ofNullable(objOrNull).orElse(Car.best());
     }
 
     public static void main(String[] args) throws RunnerException {
